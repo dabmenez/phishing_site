@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.backend.db import base, engine
-from app.backend.routers import landing, export
+from app.backend.routers import landing, export, admin
 
 app = FastAPI(title="Phishing Collector API")
 
@@ -22,6 +22,7 @@ async def on_startup():
 
 app.include_router(landing.router, prefix="/landing", tags=["Landing"])
 app.include_router(export.router, prefix="/data", tags=["Export"])
+app.include_router(admin.router, prefix="/admin", tags=["Admin"])
 
 @app.get("/")
 def read_root():

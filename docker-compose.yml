@@ -13,11 +13,12 @@ services:
     volumes:
       - .:/app                       # Monta o código da aplicação para facilitar o desenvolvimento
       - ./logs:/app/logs               # Mapeia a pasta 'logs' para persistir os logs (crie a pasta logs se ainda não existir)
-      - ./db.sqlite3:/app/db.sqlite3:Z # Monta o arquivo do banco SQLite; certifique-se de que este arquivo esteja na raiz
+      - ./db.sqlite3:/app/db.sqlite3  # Remove the :Z suffix
+    user: "${UID:-1000}:${GID:-1000}"  # Add this line
     networks:
       - app_network
     command: >
-      uvicorn app.backend.main:app --host 0.0.0.0 --port 8000
+      uvicorn app.backend.main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
     build:
@@ -30,8 +31,12 @@ services:
       - "${FRONTEND_PORT:-3000}:3000"
     volumes:
       - ./app/frontend:/app           # Monta o código do frontend (ideal para desenvolvimento)
+      - /app/node_modules  # Add this to prevent overwriting node_modules
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8000  # Add this for API calls
     networks:
       - app_network
+    command: npm start  # Change this to use development server instead of production build
 
 networks:
   app_network:

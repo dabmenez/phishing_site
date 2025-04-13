@@ -52,3 +52,9 @@ def delete_user_data(db: Session, user_id: int):
     db.delete(user)
     db.commit()
     return True
+
+def get_target_links(db: Session):
+    """
+    Retorna todos os target links do banco de dados.
+    """
+    return db.query(models.TargetLink).all()
