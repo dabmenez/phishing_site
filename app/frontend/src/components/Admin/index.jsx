@@ -8,7 +8,10 @@ import './styles.css';
 const AdminDashboard = () => {
   // -------------------------------- state ----------------------------------
   const [activeTab, setActiveTab] = useState('clicks');
-  const [stats, setStats] = useState({ totalClicks: 0, totalSubmissions: 0 });
+  const [stats, setStats] = useState({
+    totalClicks:      0,
+    totalSubmissions: 0,
+  });
   const [links, setLinks] = useState([]);
   const [email, setEmail] = useState('');
   const [campaign, setCampaign] = useState('');
@@ -24,14 +27,26 @@ const AdminDashboard = () => {
     fetchLinks();
   }, []);
 
+ 
   const fetchStats = async () => {
     try {
-      const res = await fetch(`${API}/admin/stats`);
-      setStats(await res.json());
+      const res  = await fetch(`${API}/admin/stats`);
+      const json = await res.json();
+      console.log("stats payload:", json);  // confirma no console o que chegou
+  
+      setStats({
+        totalClicks:      json.total_clicks    // snake_case
+                          ?? json.totalClicks   // camelCase
+                          ?? 0,
+        totalSubmissions: json.total_submissions
+                          ?? json.totalSubmissions
+                          ?? 0,
+      });
     } catch (e) {
-      console.error(e);
+      console.error("fetchStats error:", e);
     }
   };
+  
 
   const fetchLinks = async () => {
     setLoadingLinks(true);

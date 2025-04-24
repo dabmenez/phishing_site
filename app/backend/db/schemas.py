@@ -69,6 +69,11 @@ class Stats(BaseModel):
     total_clicks: int
     total_submissions: int
 
+    model_config = ConfigDict(
+        alias_generator=lambda s: ''.join(w.title() if i>0 else w 
+                                         for i,w in enumerate(s.split('_'))),
+        populate_by_name=True
+    )
 
 class UserDataUpdate(BaseModel):
     email: Optional[EmailStr]      = None
