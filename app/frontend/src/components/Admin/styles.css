@@ -53,13 +53,17 @@
     color: white;
 }
 
-.table-container {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    overflow: auto;
-}
-
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .table-container th,
+  .table-container td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #eee;
+  }
+  .ua { max-width: 320px; word-break: break-all; }
+  
 table {
     width: 100%;
     border-collapse: collapse;

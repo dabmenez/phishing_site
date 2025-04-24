@@ -1,13 +1,18 @@
+from typing import List
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from typing import List
-from app.backend.crud import crud
-from app.backend.db.schemas import UserDataOut
+
 from app.backend.db.engine import SessionLocal
+from app.backend.db.models import UserData
+from app.backend.db.schemas import UserDataOut
 
-router = APIRouter()
+router = APIRouter(prefix="/data", tags=["export"])  # → rota final /data/export
 
-# Função para obter a sessão do banco
+
+# --------------------------------------------------------------------------- #
+# helpers
+# --------------------------------------------------------------------------- #
 def get_db():
     db = SessionLocal()
     try:
@@ -15,11 +20,17 @@ def get_db():
     finally:
         db.close()
 
+
+# --------------------------------------------------------------------------- #
+# endpoint
+# --------------------------------------------------------------------------- #
+# app/backend/routers/export.py
 @router.get("/export", response_model=List[UserDataOut])
 def export_data(db: Session = Depends(get_db)):
-    """
-    Endpoint para exportar os dados coletados.
-    Retorna uma lista de registros salvos no banco de dados.
-    """
-    usuarios = crud.get_all_user_data(db)
-    return usuarios
+    rows = (
+        db.query(UserData)
+        .order_by(UserData.timestamp.desc())
+        .all()
+    )
+    return rows
+                                 # ← Pydantic faz a mágica

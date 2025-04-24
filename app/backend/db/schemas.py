@@ -1,58 +1,78 @@
-# app/backend/db/schemas.py
 from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, ConfigDict
 
 
+# --------------------------------------------------------------------------- #
+# Submissions (formulários)
+# --------------------------------------------------------------------------- #
 class UserDataBase(BaseModel):
-    email: str
+    email: EmailStr
     password: str
 
 class UserDataCreate(UserDataBase):
-    pass
+    link_id: Optional[str]        = None
+    timestamp: Optional[datetime] = None
+    ip_address: Optional[str]     = None
+    user_agent: Optional[str]     = None
 
-class UserDataOut(BaseModel):
+class UserDataOut(UserDataBase):
     id: int
-    email: str
-    created_at: datetime
-    ip_address: Optional[str] = None
-    user_agent: Optional[str] = None
-    link_id: Optional[str] = None
+    link_id: str
+    timestamp: datetime
+    ip_address: Optional[str]
+    user_agent: Optional[str]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
+
+# --------------------------------------------------------------------------- #
+# Target links
+# --------------------------------------------------------------------------- #
 class TargetLinkBase(BaseModel):
-    email: str
+    email: EmailStr
+    campaign: Optional[str] = None
 
 class TargetLinkCreate(TargetLinkBase):
     pass
 
 class TargetLinkOut(BaseModel):
     id: int
-    email: str
+    email: EmailStr
     link_id: str
+    campaign: Optional[str]
     created_at: datetime
-    clicked_at: Optional[datetime] = None
-    submitted_at: Optional[datetime] = None
-    ip_address: Optional[str] = None
-    user_agent: Optional[str] = None
+    clicked_at: Optional[datetime]
+    submitted_at: Optional[datetime]
+    ip_address: Optional[str]
+    user_agent: Optional[str]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class TargetLinkList(BaseModel):
     id: int
-    email: str
+    email: EmailStr
+    campaign: Optional[str] = None
     link_id: str
     created_at: datetime
     clicked_at: Optional[datetime]
     submitted_at: Optional[datetime]
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
+
+# --------------------------------------------------------------------------- #
+# Estatísticas
+# --------------------------------------------------------------------------- #
 class Stats(BaseModel):
     total_links: int
     total_clicks: int
     total_submissions: int
+
+
+class UserDataUpdate(BaseModel):
+    email: Optional[EmailStr]      = None
+    password: Optional[str]        = None
+    timestamp: Optional[datetime]  = None
+    ip_address: Optional[str]      = None
+    user_agent: Optional[str]      = None
