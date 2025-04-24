@@ -53,14 +53,13 @@ def generate_tracking_link(email: str, db: Session = Depends(get_db)):
 
 @router.get("/stats", response_model=Stats)
 def get_stats(db: Session = Depends(get_db)):
-    total_links       = db.query(TargetLink).count()
-    total_opens       = db.query(TargetLink).filter(TargetLink.opened_at.isnot(None)).count()
-    total_clicks      = db.query(TargetLink).filter(TargetLink.clicked_at.isnot(None)).count()
+    """Obter estatísticas gerais."""
+    total_links = db.query(TargetLink).count()
+    total_clicks = db.query(TargetLink).filter(TargetLink.clicked_at.isnot(None)).count()
     total_submissions = db.query(TargetLink).filter(TargetLink.submitted_at.isnot(None)).count()
-
+    
     return Stats(
         total_links=total_links,
-        total_opens=total_opens,
         total_clicks=total_clicks,
-        total_submissions=total_submissions,
+        total_submissions=total_submissions
     )
