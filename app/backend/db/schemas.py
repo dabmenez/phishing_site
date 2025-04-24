@@ -54,5 +54,6 @@ class TargetLinkList(BaseModel):
 
 class Stats(BaseModel):
     total_links: int
+    total_opens: int          # 👈 obrigatório
     total_clicks: int
     total_submissions: int

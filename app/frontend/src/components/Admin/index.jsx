@@ -1,69 +1,82 @@
-import React, { useState, useEffect } from 'react';
-import ClicksTable from './ClicksTable';
-import SubmissionsTable from './SubmissionsTable';
+import { useState, useEffect } from 'react';
+import ClicksTable        from './ClicksTable';
+import SubmissionsTable   from './SubmissionsTable';
+import FunnelChart        from './FunnelChart';      // nome do arquivo .jsx
 import './styles.css';
 
 const AdminDashboard = () => {
-    const [activeTab, setActiveTab] = useState('clicks');
-    const [stats, setStats] = useState({
-        totalClicks: 0,
-        totalSubmissions: 0
-    });
+  const [activeTab, setActiveTab] = useState('clicks');
+  const [stats, setStats] = useState({
+    total_opens:       0,
+    total_clicks:      0,
+    total_submissions: 0,
+  });
 
-    useEffect(() => {
-        fetchStats();
-    }, []);
+  const API = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
 
-    const fetchStats = async () => {
-        try {
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/admin/stats`);
-            const data = await response.json();
-            setStats(data);
-        } catch (error) {
-            console.error('Error fetching stats:', error);
-        }
-    };
+  /* ------------------------------------------------------------------ */
+  /* Carrega estatísticas globais                                       */
+  /* ------------------------------------------------------------------ */
+  const fetchStats = async () => {
+    try {
+      const res  = await fetch(`${API}/admin/stats`);
+      const data = await res.json();
+      setStats(data);
+    } catch (err) {
+      console.error('Error fetching stats:', err);
+    }
+  };
 
-    return (
-        <div className="admin-container">
-            <div className="admin-header">
-                <h1>Dashboard de Monitoramento - Phishing Test</h1>
-                <div className="stats-summary">
-                    <div className="stat-box">
-                        <h3>Total Clicks</h3>
-                        <p>{stats.totalClicks}</p>
-                    </div>
-                    <div className="stat-box">
-                        <h3>Total Submissions</h3>
-                        <p>{stats.totalSubmissions}</p>
-                    </div>
-                </div>
-            </div>
+  useEffect(() => {
+    fetchStats();
+  }, [API]);
 
-            <div className="tab-buttons">
-                <button 
-                    className={activeTab === 'clicks' ? 'active' : ''} 
-                    onClick={() => setActiveTab('clicks')}
-                >
-                    Click Tracking
-                </button>
-                <button 
-                    className={activeTab === 'submissions' ? 'active' : ''} 
-                    onClick={() => setActiveTab('submissions')}
-                >
-                    Form Submissions
-                </button>
-            </div>
+  return (
+    <div className="admin-container">
+      {/* Header / KPIs -------------------------------------------------- */}
+      <div className="admin-header">
+        <h1>Phishing Test Dashboard</h1>
 
-            <div className="tab-content">
-                {activeTab === 'clicks' ? (
-                    <ClicksTable />
-                ) : (
-                    <SubmissionsTable />
-                )}
-            </div>
+        <div className="stats-summary">
+          <div className="stat-box">
+            <h3>Opened</h3>
+            <p>{stats?.total_opens ?? 0}</p>
+          </div>
+          <div className="stat-box">
+            <h3>Clicked</h3>
+            <p>{stats?.total_clicks ?? 0}</p>
+          </div>
+          <div className="stat-box">
+            <h3>Submitted</h3>
+            <p>{stats?.total_submissions ?? 0}</p>
+          </div>
         </div>
-    );
+      </div>
+
+      {/* Funil ---------------------------------------------------------- */}
+      <FunnelChart />
+
+      {/* Abas ----------------------------------------------------------- */}
+      <div className="tab-buttons">
+        <button
+          className={activeTab === 'clicks' ? 'active' : ''}
+          onClick={() => setActiveTab('clicks')}
+        >
+          Click Tracking
+        </button>
+        <button
+          className={activeTab === 'submissions' ? 'active' : ''}
+          onClick={() => setActiveTab('submissions')}
+        >
+          Form Submissions
+        </button>
+      </div>
+
+      <div className="tab-content">
+        {activeTab === 'clicks' ? <ClicksTable /> : <SubmissionsTable />}
+      </div>
+    </div>
+  );
 };
 
 export default AdminDashboard;

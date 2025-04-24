@@ -17,12 +17,16 @@ class UserData(Base):
 
 class TargetLink(Base):
     __tablename__ = "target_link"
-    id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, nullable=False)
-    link_id = Column(String, nullable=False, unique=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    clicked_at = Column(DateTime, nullable=True)
+    id           = Column(Integer, primary_key=True, index=True)
+    email        = Column(String,  nullable=False)
+    link_id      = Column(String,  nullable=False, unique=True)
+    created_at   = Column(DateTime, default=datetime.utcnow)
+
+    opened_at    = Column(DateTime, nullable=True)          # 👈 novo
+    clicked_at   = Column(DateTime, nullable=True)
     submitted_at = Column(DateTime, nullable=True)
-    ip_address = Column(String, nullable=True)
-    user_agent = Column(String, nullable=True)
-    submissions = relationship("UserData", back_populates="target_link")
+
+    ip_address   = Column(String, nullable=True)
+    user_agent   = Column(String, nullable=True)
+
+    submissions  = relationship("UserData", back_populates="target_link")
