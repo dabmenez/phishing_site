@@ -92,3 +92,5 @@ htmlcov/
 # Misc
 .DS_Store
 Thumbs.db
+
+app/.env
