@@ -1,0 +1,25 @@
+# Evitar quebrar o build do Node
+node_modules
+build
+npm-debug.log
+yarn-error.log
+
+# Evitar copiar lixo do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+*.db
+*.sqlite3
+
+# Outras coisas desnecessárias
+.dockerignore
+Dockerfile
+docker-compose.yml
+.git
+.gitignore
+.vscode
+.idea
+*.log

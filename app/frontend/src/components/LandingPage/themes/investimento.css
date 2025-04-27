@@ -1,0 +1,64 @@
+/* investimento.css */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #d7e5ff, #f3f8ff);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .investment-container {
+    padding: 20px;
+  }
+  
+  .investment-card {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    max-width: 420px;
+    text-align: center;
+  }
+  
+  .investment-card h1 {
+    font-size: 22px;
+    margin-bottom: 12px;
+    color: #002855;
+  }
+  
+  .investment-card p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 24px;
+  }
+  
+  .investment-card input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  
+  .investment-card button {
+    width: 100%;
+    padding: 12px;
+    background-color: #0056b3;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .investment-card button:hover {
+    background-color: #003d80;
+  }
+  

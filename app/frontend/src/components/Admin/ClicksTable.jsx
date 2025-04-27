@@ -7,7 +7,10 @@ const ClicksTable = () => {
   useEffect(() => {
     fetch(`${process.env.REACT_APP_BACKEND_URL}/admin/target-link`)
       .then((r) => r.json())
-      .then(setRows)
+      .then((data) => {
+        console.log(">>> DEBUG (frontend) dados recebidos:", data);
+        setRows(data);
+      })
       .catch((e) => console.error("target-link:", e))
       .finally(() => setLoading(false));
   }, []);
@@ -15,8 +18,20 @@ const ClicksTable = () => {
   if (loading) return <div>Loading…</div>;
 
   const fmt = (iso) => {
-    const d = new Date(iso);
-    return isNaN(d) ? "-" : d.toLocaleString();
+    if (!iso) return "-";
+    try {
+      const utcDate = new Date(iso);
+
+      // Ajustar manualmente para o fuso horário de São Paulo (UTC-3)
+      const localDate = new Date(utcDate.getTime() - (3 * 60 * 60 * 1000)); // subtrai 3 horas em milissegundos
+
+      return localDate.toLocaleString("pt-BR", {
+        hour12: false,
+      });
+    } catch (error) {
+      console.error("Erro formatando data:", iso, error);
+      return "-";
+    }
   };
 
   return (

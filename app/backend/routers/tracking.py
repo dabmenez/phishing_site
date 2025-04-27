@@ -10,7 +10,6 @@ from app.backend.db.schemas import UserDataCreate, UserDataOut
 
 router = APIRouter(tags=["tracking"])
 
-
 # --------------------------------------------------------------------------- #
 # helpers
 # --------------------------------------------------------------------------- #
@@ -21,21 +20,19 @@ def get_db():
     finally:
         db.close()
 
-
 def now_utc() -> datetime:
     """Datetime timezone-aware em UTC (ISO-8601)."""
     return datetime.now(timezone.utc)
 
-
 # --------------------------------------------------------------------------- #
 # endpoints
 # --------------------------------------------------------------------------- #
-@router.get("/l/{link_id}", status_code=204)
+@router.get("/l/{link_id}", status_code=200)
 async def record_click(request: Request, link_id: str, db: Session = Depends(get_db)):
     """
     • Marca `clicked_at` (somente na 1ª vez)
     • Registra IP + User-Agent
-    • Retorna 204 No Content
+    • Retorna email e campanha do link
     """
     target_link = db.query(TargetLink).filter_by(link_id=link_id).first()
     if target_link is None:
@@ -47,8 +44,11 @@ async def record_click(request: Request, link_id: str, db: Session = Depends(get
         target_link.user_agent = request.headers.get("user-agent", "")
         db.commit()
 
-    return  # 204
-
+    # Aqui devolvemos as informações necessárias para o Frontend
+    return {
+        "email": target_link.email,
+        "campaign": target_link.campaign or "default",
+    }
 
 @router.post("/submit/{link_id}", response_model=UserDataOut, status_code=201)
 async def submit_data(
@@ -70,7 +70,6 @@ async def submit_data(
 
     # 2) preenche só email+password do cliente
     data_dict = payload.model_dump(exclude_none=True)
-    # agora data_dict == {"email": "...", "password": "..."}
     enriched = UserDataCreate(
         **data_dict,
         link_id    = link_id,

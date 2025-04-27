@@ -1,7 +1,8 @@
 # app/backend/routers/admin.py
-from datetime import datetime
+from datetime import datetime, timezone
 import base64, hashlib
 from typing import List
+from fastapi.encoders import jsonable_encoder
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -25,7 +26,7 @@ def get_db():
 
 
 def generate_link_id(email: str) -> str:        # ← ESTA FUNÇÃO PRECISA EXISTIR!
-    raw = f"{email}:{datetime.utcnow().isoformat()}"
+    raw = f"{email}:{datetime.now(timezone.utc).isoformat()}"
     digest = hashlib.sha256(raw.encode()).digest()
     return base64.urlsafe_b64encode(digest)[:8].decode()
 
@@ -40,8 +41,9 @@ def generate_tracking_link(link: TargetLinkCreate, db: Session = Depends(get_db)
         email=link.email,
         campaign=link.campaign,
         link_id=link_id,
-        created_at=datetime.utcnow(),
+        created_at=datetime.now(timezone.utc),  # garantir que é timezone-aware
     )
+    print(">>> DEBUG created_at:", target_link.created_at.isoformat())
     try:
         db.add(target_link)
         db.commit()
@@ -54,7 +56,8 @@ def generate_tracking_link(link: TargetLinkCreate, db: Session = Depends(get_db)
 
 @router.get("/target-link", response_model=List[TargetLinkOut])
 def get_all_links(db: Session = Depends(get_db)):
-    return db.query(TargetLink).all()
+    links = db.query(TargetLink).all()
+    return jsonable_encoder(links)
 
 
 @router.get("/stats", response_model=Stats)
