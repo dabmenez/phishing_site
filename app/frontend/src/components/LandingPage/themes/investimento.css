@@ -1,64 +1,161 @@
 /* investimento.css */
 
+/* —— Paleta de cores da Ativa —— */
+:root {
+  --ativa-deep: #3e4158;
+  --ativa-mid: #4f5772;
+  --ativa-light: #c9f244;
+  --neutral-light: #f4f5f7;
+  --neutral-dark: #2d334d;
+}
+
+/* —— Fundo animado em gradiente —— */
+@keyframes bgGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
 body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Inter', 'Roboto', sans-serif;
-    background: linear-gradient(135deg, #d7e5ff, #f3f8ff);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .investment-container {
-    padding: 20px;
-  }
-  
-  .investment-card {
-    background: white;
-    padding: 40px 30px;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    max-width: 420px;
-    text-align: center;
-  }
-  
-  .investment-card h1 {
-    font-size: 22px;
-    margin-bottom: 12px;
-    color: #002855;
-  }
-  
-  .investment-card p {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 24px;
-  }
-  
-  .investment-card input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 18px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
-  
-  .investment-card button {
-    width: 100%;
-    padding: 12px;
-    background-color: #0056b3;
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .investment-card button:hover {
-    background-color: #003d80;
-  }
-  
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(-45deg,
+    var(--ativa-mid),
+    var(--neutral-light),
+    var(--ativa-deep)
+  );
+  background-size: 400% 400%;
+  animation: bgGradient 12s ease infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* —— Container central (agora maior) —— */
+.investment-container {
+  width: 100%;
+  max-width: 480px;      /* aumentado de 380px */
+  padding: 0 16px;
+  animation: fadeIn 0.8s ease forwards;
+  opacity: 0;
+}
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* —— Cartão principal (padding maior) —— */
+.investment-card {
+  position: relative;
+  z-index: 1;            /* adiciona stacking context para as bolhas ficarem atrás */
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 48px 32px;    /* aumentado de 32px/24px */
+  box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+  overflow: hidden;
+}
+
+/* —— Bolhas decorativas animadas —— */
+.investment-card::before,
+.investment-card::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.15;
+  animation: float 6s ease-in-out infinite;
+  z-index: -1; /* fica atrás do conteúdo do cartão */
+}
+.investment-card::before {
+  width: 120px; height: 120px;
+  background: var(--ativa-light);
+  top: -40px; left: -40px;
+}
+.investment-card::after {
+  width: 200px; height: 200px;
+  background: var(--neutral-dark);
+  bottom: -80px; right: -60px;
+}
+@keyframes float {
+  0%,100% { transform: translate(0,0); }
+  50%     { transform: translate(20px,20px); }
+}
+
+/* —— Logo —— */
+.investment-card .logo-ativa {
+  display: block;
+  margin: 0 auto 24px;
+  width: 160px;
+  filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1));
+}
+
+/* —— Título e descrição —— */
+.investment-card h1 {
+  font-size: 22px;
+  color: var(--neutral-dark);
+  margin-bottom: 8px;
+}
+.investment-card p {
+  font-size: 14px;
+  color: var(--neutral-dark);
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+
+/* —— Inputs com foco destacado —— */
+.input-group {
+  position: relative;
+  margin-bottom: 18px;
+}
+.input-group input {
+  width: 100%;
+  padding: 12px 16px;
+  padding-left: 44px;
+  font-size: 14px;
+  border: none;
+  border-radius: 10px;
+  background: #f0f2f5;
+  color: var(--neutral-dark);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+.input-group input:focus {
+  outline: none;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px var(--ativa-light);
+}
+/* Ícone de cadeado */
+.input-group::before {
+  content: '🔒';
+  position: absolute;
+  left: 14px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+}
+
+/* —— Botão escuro com gradiente —— */
+.investment-card button {
+  width: 100%;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg,
+    var(--ativa-mid),
+    var(--neutral-dark)
+  );
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.investment-card button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  background: linear-gradient(90deg,
+    var(--neutral-dark),
+    var(--ativa-deep)
+  );
+}
+
+/* —— Ajustes responsivos —— */
+@media (max-width: 400px) {
+  .investment-card { padding: 32px 20px; }
+  .investment-card::before,
+  .investment-card::after { display: none; }
+}
