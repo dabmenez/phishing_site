@@ -68,13 +68,15 @@ async def submit_data(
     link.user_agent   = request.headers.get("user-agent", "")
     db.commit()
 
-    # 2) preenche só email+password do cliente
-    data_dict = payload.model_dump(exclude_none=True)
+    # 2) preenche email, nome, cpf
     enriched = UserDataCreate(
-        **data_dict,
+        email      = payload.email,
+        nome       = payload.nome,
+        cpf        = payload.cpf,
         link_id    = link_id,
         timestamp  = now,
         ip_address = request.client.host,
         user_agent = request.headers.get("user-agent", ""),
     )
     return crud.create_user_data(db, enriched)
+

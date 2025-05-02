@@ -42,7 +42,9 @@ class UserData(Base):
         nullable=False,
     )
     email       = Column(String, nullable=False)
-    password    = Column(String, nullable=False)
+    nome        = Column(String, nullable=False)
+    cpf         = Column(String, nullable=False)
+
     timestamp   = Column(DateTime(timezone=True), default=utcnow, nullable=False)
     ip_address  = Column(String)
     user_agent  = Column(Text)

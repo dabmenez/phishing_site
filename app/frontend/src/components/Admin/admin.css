@@ -1,0 +1,205 @@
+/* admin.css */
+
+/* Página inteira */
+.admin-page {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background: #f5f7fa;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+  }
+  
+  /* Título principal */
+  .admin-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 32px;
+    color: #111;
+  }
+  
+  /* Grid de KPIs */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  
+  /* Card de KPI */
+  .kpi-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: box-shadow .2s;
+  }
+  .kpi-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  }
+  /* Dentro do card */
+  .kpi-info {
+    display: flex;
+    flex-direction: column;
+  }
+  .kpi-title {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  .kpi-value {
+    margin-top: 8px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #222;
+  }
+  
+  /* Seções principais */
+  .section-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 40px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  .section-title {
+    font-size: 1.25rem;
+    margin: 0;
+    color: #333;
+  }
+  
+  /* Botão de export */
+  .export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .export-btn:hover {
+    background: #2563eb;
+  }
+  
+  /* Corpo da seção */
+  .section-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    padding: 24px;
+  }
+  @media (max-width: 768px) {
+    .section-body {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  /* Grupos de campo */
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .field-group .label {
+    font-size: 0.9rem;
+    color: #555;
+  }
+  .field-group .input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+  .field-group .input:disabled {
+    background: #f0f0f0;
+    cursor: not-allowed;
+  }
+  
+  /* Botão de ação dentro da seção */
+  .action-btn {
+    margin-top: 8px;
+    padding: 12px;
+    font-size: 1rem;
+    background: #10b981;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .action-btn:disabled {
+    background: #9be4c5;
+    cursor: not-allowed;
+  }
+  .action-btn:not(:disabled):hover {
+    background: #059669;
+  }
+  
+  /* Mensagem de sucesso */
+  .message {
+    font-size: 0.9rem;
+    color: #16a34a;
+  }
+  
+  /* Gráfico */
+  .chart-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 40px;
+  }
+  .chart-title {
+    font-size: 1.25rem;
+    padding: 16px 24px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  .chart-content {
+    height: 360px;
+    padding: 16px 24px;
+  }
+  
+  /* Tabs */
+  .tabs-container {
+    margin-top: 40px;
+  }
+  .tabs-list {
+    display: flex;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  .tab-trigger {
+    padding: 12px 24px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #555;
+    transition: background .2s, color .2s;
+  }
+  .tab-trigger[data-state="active"] {
+    background: #fff;
+    color: #111;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border: 1px solid #e5e5e5;
+    border-bottom: none;
+  }
+  .tab-content {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-top: none;
+    padding: 24px;
+    border-radius: 0 0 6px 6px;
+  }
+  

@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 
 const DefaultLanding = ({ linkId }) => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({
+    email: '',
+    nome: '',
+    cpf: ''
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,22 +34,22 @@ const DefaultLanding = ({ linkId }) => {
   };
 
   return (
-    <div style={{ 
-      minHeight: "100vh", 
-      display: "flex", 
-      justifyContent: "center", 
-      alignItems: "center", 
+    <div style={{
+      minHeight: "100vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
       background: "linear-gradient(135deg, #f8f8f8, #e0e0e0)"
     }}>
-      <div style={{ 
-        background: "white", 
-        padding: "40px", 
-        borderRadius: "12px", 
-        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.1)", 
+      <div style={{
+        background: "white",
+        padding: "40px",
+        borderRadius: "12px",
+        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.1)",
         textAlign: "center"
       }}>
         <h1>Portal Corporativo</h1>
-        <p>Insira suas credenciais para acessar a plataforma.</p>
+        <p>Preencha seus dados para acessar a plataforma.</p>
         <form onSubmit={handleSubmit}>
           <input
             type="email"
@@ -57,12 +61,22 @@ const DefaultLanding = ({ linkId }) => {
             style={{ margin: "8px 0", padding: "10px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
           />
           <input
-            type="password"
-            name="password"
-            placeholder="Senha"
-            value={formData.password}
+            type="text"
+            name="nome"
+            placeholder="Nome completo"
+            value={formData.nome}
             onChange={handleChange}
             required
+            style={{ margin: "8px 0", padding: "10px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
+          />
+          <input
+            type="text"
+            name="cpf"
+            placeholder="CPF"
+            value={formData.cpf}
+            onChange={handleChange}
+            required
+            maxLength={14}
             style={{ margin: "8px 0", padding: "10px", width: "100%", borderRadius: "8px", border: "1px solid #ccc" }}
           />
           <button

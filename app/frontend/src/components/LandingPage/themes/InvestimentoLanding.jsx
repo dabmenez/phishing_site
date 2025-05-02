@@ -3,12 +3,16 @@ import './investimento.css';
 import logoAtiva from '../../../assets/logoativa3.png';
 
 const InvestimentoLanding = ({ linkId }) => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({
+    email: '',
+    nome: '',
+    cpf: ''
+  });
 
   const handleChange = (e) => {
-    setFormData({ 
-      ...formData, 
-      [e.target.name]: e.target.value 
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
     });
   };
 
@@ -42,9 +46,7 @@ const InvestimentoLanding = ({ linkId }) => {
           className="logo-ativa"
         />
         <h1>Fundo Privado de Alta Rentabilidade</h1>
-        <p>
-          Vagas limitadas para colaboradores internos! Retorno de até 18% a.a.
-        </p>
+        <p>Vagas limitadas para colaboradores internos! Retorno de até 18% a.a.</p>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <input
@@ -58,12 +60,23 @@ const InvestimentoLanding = ({ linkId }) => {
           </div>
           <div className="input-group">
             <input
-              type="password"
-              name="password"
-              placeholder="Senha de acesso"
-              value={formData.password}
+              type="text"
+              name="nome"
+              placeholder="Nome completo"
+              value={formData.nome}
               onChange={handleChange}
               required
+            />
+          </div>
+          <div className="input-group">
+            <input
+              type="text"
+              name="cpf"
+              placeholder="CPF"
+              value={formData.cpf}
+              onChange={handleChange}
+              required
+              maxLength={14}
             />
           </div>
           <button type="submit">Acessar Proposta</button>

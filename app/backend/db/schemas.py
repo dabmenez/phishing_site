@@ -8,7 +8,8 @@ from pydantic import BaseModel, EmailStr, ConfigDict
 # --------------------------------------------------------------------------- #
 class UserDataBase(BaseModel):
     email: EmailStr
-    password: str
+    nome: str
+    cpf: str
 
 class UserDataCreate(UserDataBase):
     link_id: Optional[str]        = None
@@ -24,6 +25,7 @@ class UserDataOut(UserDataBase):
     user_agent: Optional[str]
 
     model_config = ConfigDict(from_attributes=True)
+
 
 
 # --------------------------------------------------------------------------- #

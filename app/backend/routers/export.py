@@ -33,4 +33,3 @@ def export_data(db: Session = Depends(get_db)):
         .all()
     )
     return rows
-                                 # ← Pydantic faz a mágica
