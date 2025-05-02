@@ -1,69 +1,124 @@
 import React, { useEffect, useState } from "react";
+import { Trash2 } from "lucide-react";
+import { Button } from "../ui/button";
 
-const ClicksTable = () => {
+/* troque pelo seu componente, se já existir */
+const Checkbox = ({ checked, indeterminate, onChange }) => (
+  <input
+    type="checkbox"
+    className="h-4 w-4 cursor-pointer accent-blue-600"
+    ref={el => el && (el.indeterminate = indeterminate)}
+    checked={checked}
+    onChange={onChange}
+  />
+);
+
+const API = process.env.REACT_APP_BACKEND_URL;
+
+/* helper p/ datas ISO → “YYYY-MM-DD HH:MM:SS” */
+const fmt = ts => ts?.slice(0, 19).replace("T", " ") ?? "-";
+
+const ClicksTable = ({ onRefresh }) => {
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLo] = useState(true);
+  const [sel, setSel] = useState(new Set());
 
-  useEffect(() => {
-    fetch(`${process.env.REACT_APP_BACKEND_URL}/admin/target-link`)
-      .then((r) => r.json())
-      .then((data) => {
-        console.log(">>> DEBUG (frontend) dados recebidos:", data);
-        setRows(data);
-      })
-      .catch((e) => console.error("target-link:", e))
-      .finally(() => setLoading(false));
-  }, []);
+  /* fetch ---------------------------------------------------------------- */
+  const fetchRows = async () => {
+    setLo(true);
+    try   { setRows(await (await fetch(`${API}/admin/target-link`)).json()); }
+    catch (e) { console.error(e); }
+    finally { setLo(false); }
+  };
+  useEffect(() => { fetchRows(); }, []);
 
-  if (loading) return <div>Loading…</div>;
+  /* seleção -------------------------------------------------------------- */
+  const toggleOne = email =>
+    setSel(s => {
+      const n = new Set(s);
+      n.has(email) ? n.delete(email) : n.add(email);
+      return n;
+    });
 
-  const fmt = (iso) => {
-    if (!iso) return "-";
+  const toggleAll = () =>
+    setSel(sel.size === rows.length ? new Set()
+                                   : new Set(rows.map(r => r.email)));
+
+  /* deleção -------------------------------------------------------------- */
+  const deleteSelected = async () => {
+    if (!sel.size) return;
     try {
-      const utcDate = new Date(iso);
-
-      // Ajustar manualmente para o fuso horário de São Paulo (UTC-3)
-      const localDate = new Date(utcDate.getTime() - (3 * 60 * 60 * 1000)); // subtrai 3 horas em milissegundos
-
-      return localDate.toLocaleString("pt-BR", {
-        hour12: false,
+      await fetch(`${API}/admin/emails`, {
+        method:  "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ emails: Array.from(sel) }),
       });
-    } catch (error) {
-      console.error("Erro formatando data:", iso, error);
-      return "-";
-    }
+      setSel(new Set());
+      await fetchRows();
+      onRefresh?.();
+    } catch (e) { console.error(e); }
   };
 
+  /* UI ------------------------------------------------------------------- */
+  if (loading) return <p className="py-8 text-center">Carregando…</p>;
+
   return (
-    <div className="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Link&nbsp;ID</th>
-            <th>Campaign</th>
-            <th>Created&nbsp;At</th>
-            <th>Clicked&nbsp;At</th>
-            <th>Submitted&nbsp;At</th>
-            <th>IP&nbsp;Address</th>
-            <th>User&nbsp;Agent</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r) => (
-            <tr key={r.id}>
-              <td>{r.email}</td>
-              <td>{r.link_id}</td>
-              <td>{r.campaign || "-"}</td>
-              <td>{fmt(r.created_at)}</td>
-              <td>{fmt(r.clicked_at)}</td>
-              <td>{fmt(r.submitted_at)}</td>
-              <td>{r.ip_address || "-"}</td>
-              <td className="ua">{r.user_agent || "-"}</td>
+    <div className="space-y-4">
+      {/* barra de ações */}
+      <Button
+        disabled={!sel.size}
+        onClick={deleteSelected}
+        className="flex items-center gap-1 bg-red-600 hover:bg-red-700 disabled:opacity-40"
+      >
+        <Trash2 className="h-4 w-4" />
+        Delete&nbsp;({sel.size})
+      </Button>
+
+      {/* tabela */}
+      <div className="overflow-auto rounded-xl border">
+        <table className="min-w-[960px] w-full text-sm border-x">
+          <thead>
+            <tr className="bg-gray-100 border-b">
+              <th className="w-8 text-center px-3 py-2">
+                <Checkbox
+                  checked={sel.size === rows.length && rows.length > 0}
+                  indeterminate={sel.size > 0 && sel.size < rows.length}
+                  onChange={toggleAll}
+                />
+              </th>
+              <th className="px-4 py-2">EMAIL</th>
+              <th className="px-4 py-2">LINK&nbsp;ID</th>
+              <th className="px-4 py-2">CAMPAIGN</th>
+              <th className="px-4 py-2">CREATED</th>
+              <th className="px-4 py-2">CLICKED</th>
+              <th className="px-4 py-2">SUBMITTED</th>
+              <th className="px-4 py-2">IP</th>
+              <th className="px-4 py-2">USER&nbsp;AGENT</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {rows.map(r => (
+              <tr key={r.id} className="odd:bg-white even:bg-gray-50 border-b">
+                <td className="text-center px-3 py-2">
+                  <Checkbox
+                    checked={sel.has(r.email)}
+                    onChange={() => toggleOne(r.email)}
+                  />
+                </td>
+                <td className="px-4 py-2">{r.email}</td>
+                <td className="px-4 py-2">{r.link_id}</td>
+                <td className="px-4 py-2">{r.campaign ?? "-"}</td>
+                <td className="px-4 py-2">{fmt(r.created_at)}</td>
+                <td className="px-4 py-2">{fmt(r.clicked_at)}</td>
+                <td className="px-4 py-2">{fmt(r.submitted_at)}</td>
+                <td className="px-4 py-2">{r.ip_address ?? "-"}</td>
+                <td className="px-4 py-2 max-w-[300px] break-all">{r.user_agent ?? "-"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

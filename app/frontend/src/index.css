@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "@fontsource/roboto/latin-400.css";
+@import "@fontsource/roboto/latin-500.css";
+
+:root { font-family: "Roboto", sans-serif; }
+
+/* fundo geral */
+body { @apply bg-gray-50; }
+
+/* container que ainda usa a classe .container em páginas antigas */
+.container { @apply max-w-3xl mx-auto my-8 p-4 bg-white rounded-2xl shadow; }
+
+/* botão global */
+button:not(.btn-reset) { @apply w-full py-3 text-white bg-blue-600 rounded-lg text-base; }
+button:not(.btn-reset):hover { @apply bg-blue-700; }

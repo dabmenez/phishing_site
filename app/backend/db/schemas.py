@@ -81,3 +81,15 @@ class UserDataUpdate(BaseModel):
     timestamp: Optional[datetime]  = None
     ip_address: Optional[str]      = None
     user_agent: Optional[str]      = None
+
+# --------------------------------------------------------------------------- #
+# Ações em lote (Admin)
+# --------------------------------------------------------------------------- #
+class EmailsPayload(BaseModel):
+    """Payload para apagar todos os dados ligados a uma lista de e-mails."""
+    emails: List[EmailStr]
+
+    model_config = ConfigDict(
+        json_schema_extra={"example": {"emails": ["ana@ex.com", "bob@ex.com"]}},
+        min_anystr_length=1,
+    )
