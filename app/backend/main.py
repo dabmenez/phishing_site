@@ -10,13 +10,14 @@ app = FastAPI(title="Phishing Collector API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",  # para desenvolvimento local
-        "https://phishing-frontend.onrender.com"  # para produção no Render
+        "http://localhost:3000",                      # para desenvolvimento local
+        "https://portal-ativa.onrender.com",          # novo frontend no Render
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # ──────────────────────────────────────────────── cria tabelas no start-up ──
 @app.on_event("startup")
