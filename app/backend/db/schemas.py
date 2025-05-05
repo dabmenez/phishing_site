@@ -5,7 +5,12 @@ from pydantic import BaseModel, EmailStr, ConfigDict
 
 # --------------------------------------------------------------------------- #
 # Submissions (formulários)
-# --------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------- # 
+
+class BulkLinkCreate(BaseModel):
+    email: str
+    campaign: str
+
 class UserDataBase(BaseModel):
     email: EmailStr
     nome: str

@@ -103,12 +103,19 @@ export default function AdminDashboard() {
       const idxEmail = header.findIndex(isEmailHeader);
       const idxTema = header.findIndex(isTemaHeader);
       if (idxEmail === -1) throw new Error("Coluna de email não encontrada.");
+  
       const records = rows.slice(1)
         .map(row => ({ email: row[idxEmail], campaign: idxTema !== -1 ? row[idxTema] : undefined }))
         .filter(r => r.email);
-      for (let i = 0; i < records.length; i += 10) {
-        await Promise.all(records.slice(i, i + 10).map(rec => genLink(rec)));
-      }
+  
+      const r = await fetch(`${API}/admin/generate-bulk`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(records),
+      });
+  
+      if (!r.ok) throw new Error((await r.json()).detail || "Erro ao importar");
+  
       await Promise.all([fetchStats(), fetchLinks()]);
       setMsg(`Processado: ${records.length} registros ✅`);
     } catch (err) {
@@ -119,6 +126,7 @@ export default function AdminDashboard() {
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
+  
 
   const chartData = useMemo(() => {
     const map = {};
