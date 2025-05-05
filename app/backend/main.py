@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.backend.db import base, engine
 from app.backend.routers import admin, export, tracking  # ordem não importa
 
-app = FastAPI(title="Phishing Collector API")
+app = FastAPI(title="API")
 
 # ───────────────────────────────────────────────────────────────────── CORS ──
 app.add_middleware(
@@ -32,4 +32,4 @@ app.include_router(admin.router,  prefix="/admin",  tags=["Admin"])
 # ─────────────────────────────────────────────────────────── health-check ──
 @app.get("/")
 def read_root():
-    return {"message": "Bem-vindo à API Phishing Collector!"}
+    return {"message": "Bem-vindo à API"}

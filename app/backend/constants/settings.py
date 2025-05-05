@@ -1,7 +1,7 @@
 # app/backend/constants/settings.py
 
 # Configurações da Aplicação
-APP_NAME = "Phishing Collector"
+APP_NAME = "Ativa investimentos"
 APP_VERSION = "1.0.0"
 
 # Configurações de Segurança
